@@ -58,6 +58,55 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  [...document.getElementsByClassName("key")].forEach(el => {
+    el.addEventListener("click", (e) => keyPressed(e));
+  });
+
+  window.addEventListener("keyup", (e) => keyPressed(e));
+    
+  function keyPressed(event) {
+    let keyCode;
+    let music;
+    let audioElem;
+
+    if (event.type === "click") {
+      keyCode = event.target.parentNode.attributes[0].value;
+
+      // If html have 1 element representing key and 1 audio, audio is at index 1
+      audioElem = document.querySelectorAll(`[data-key="${keyCode}"]`)[1];
+      
+      music = new Audio(audioElem.src);
+      music.play();
+
+      // Add style
+      event.target.parentNode.classList.add("playing");
+      setInterval(() => {
+        event.target.parentNode.classList.remove("playing");
+      }, 1000);
+
+    } else {
+      keyCode = event.keyCode;
+
+      let keyCodesList = [...document.querySelectorAll("audio")].map((el) => {
+        return el.attributes[0].value;
+      });
+      if (keyCodesList.includes(keyCode.toString())) {
+        // If html have 1 element representing key and 1 audio, audio is at index 1
+        audioElem = document.querySelectorAll(`[data-key="${keyCode}"]`)[1];
+      
+        music = new Audio(audioElem.src);
+        music.play();
+
+        // Add style
+        let keyElem = document.querySelectorAll(`[data-key="${keyCode}"]`)[0];
+        keyElem.classList.add("playing");
+        setInterval(() => {
+          keyElem.classList.remove("playing");
+        }, 1000);
+        
+      }
+    }
+  }
 
 </script>
 
