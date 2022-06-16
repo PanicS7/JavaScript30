@@ -71,18 +71,32 @@
 
     if (event.type === "click") {
       keyCode = event.target.parentNode.attributes[0].value;
+      let clickError = false;
 
+      // Fix for choosing wrong element on click:
+      // Can happen when user click neer border
+      if (keyCode === "keys") {
+        keyCode = event.target.attributes[0].value;
+        clickError = true;
+      }
       // If html have 1 element representing key and 1 audio, audio is at index 1
       audioElem = document.querySelectorAll(`[data-key="${keyCode}"]`)[1];
-      
+
       music = new Audio(audioElem.src);
       music.play();
 
       // Add style
-      event.target.parentNode.classList.add("playing");
-      setInterval(() => {
-        event.target.parentNode.classList.remove("playing");
-      }, 1000);
+      if (clickError === true) {
+        event.target.classList.add("playing");
+        setInterval(() => {
+          event.target.classList.remove("playing");
+        }, 1000);
+      } else {
+        event.target.parentNode.classList.add("playing");
+        setInterval(() => {
+          event.target.parentNode.classList.remove("playing");
+        }, 1000);
+      }
 
     } else {
       keyCode = event.keyCode;
