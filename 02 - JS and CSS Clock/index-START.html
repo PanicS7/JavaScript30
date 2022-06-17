@@ -68,30 +68,42 @@
       transition-timing-function: ease-in;
     }
 
+    .second-hand {
+      background-color: red;
+    }
+    .min-hand {
+      background-color: gray;
+    }
+    .hour-hand {
+      background-color: black;
+    }
+
   </style>
 
   <script>
-    let counter = 1;
+    let clockRun = false;
 
     function moveClockHand () {
       const secondHand = document.querySelector(".second-hand");
       const minHand = document.querySelector(".min-hand");
       const hourHand = document.querySelector(".hour-hand");
+
       let currSecAngle;
       let currMinAngle;
+      let currHourAngle;
       
       // calculate secondHand moving angle
-      if (counter === 1) {
+      if (clockRun === false) {
         currSecAngle = 90;
       }
       else {
         currSecAngle = secondHand.style.transform;
         currSecAngle = Number(currSecAngle.match(/\d+/g));
       }   
-      let rotateAngle = currSecAngle + 6;
+      let rotateSecAngle = currSecAngle + 6;
 
       // calculate minHand moving angle 
-      if (counter === 1) {
+      if (clockRun === false) {
         currMinAngle = 90;
       }
       else {
@@ -100,23 +112,28 @@
       }   
       let rotateMinAngle = currMinAngle + (6/60);
 
-      // calculate hourHand moving angle
-      if (counter % 3600 === 0) {
-        // move hourHand
+      // calculate hourHand moving angle 
+      if (clockRun === false) {
+        currHourAngle = 90;
       }
+      else {
+        currHourAngle = hourHand.style.transform;
+        currHourAngle = Number(currHourAngle.match(/\d+(\.\d+)?/g));
+      }   
+      let rotateHourAngle = currHourAngle + (30/3600);
 
       // move secondHand
-      secondHand.style.transform = `rotate(${rotateAngle}deg)`; 
+      secondHand.style.transform = `rotate(${rotateSecAngle}deg)`; 
       // move minHand
       minHand.style.transform = `rotate(${rotateMinAngle}deg)`; 
+      // move hourHand
+      hourHand.style.transform = `rotate(${rotateHourAngle}deg)`; 
 
-      counter++;
+      clockRun = true;
     }
 
-    //moveClockHand();
     // Move hands after 1 second
-    setInterval(moveClockHand,1000)
-
+    setInterval(moveClockHand,1000);
   </script>
 </body>
 </html>
