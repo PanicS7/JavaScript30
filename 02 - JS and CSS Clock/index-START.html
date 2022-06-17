@@ -78,7 +78,9 @@
       const minHand = document.querySelector(".min-hand");
       const hourHand = document.querySelector(".hour-hand");
       let currSecAngle;
+      let currMinAngle;
       
+      // calculate secondHand moving angle
       if (counter === 1) {
         currSecAngle = 90;
       }
@@ -86,26 +88,34 @@
         currSecAngle = secondHand.style.transform;
         currSecAngle = Number(currSecAngle.match(/\d+/g));
       }   
-      
       let rotateAngle = currSecAngle + 6;
 
-
-      if (counter % 60 === 0) {
-        // move minHand
+      // calculate minHand moving angle 
+      if (counter === 1) {
+        currMinAngle = 90;
       }
+      else {
+        currMinAngle = minHand.style.transform;
+        currMinAngle = Number(currMinAngle.match(/\d+(\.\d+)?/g));
+      }   
+      let rotateMinAngle = currMinAngle + (6/60);
+
+      // calculate hourHand moving angle
       if (counter % 3600 === 0) {
         // move hourHand
       }
 
       // move secondHand
       secondHand.style.transform = `rotate(${rotateAngle}deg)`; 
+      // move minHand
+      minHand.style.transform = `rotate(${rotateMinAngle}deg)`; 
 
       counter++;
     }
 
     //moveClockHand();
     // Move hands after 1 second
-    //setInterval(moveClockHand,1000)
+    setInterval(moveClockHand,1000)
 
   </script>
 </body>
