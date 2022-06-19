@@ -54,6 +54,7 @@
       width: 100%;
       height: 100%;
       transform: translateY(-3px); /* account for the height of the clock hands */
+      transform: rotate(90deg);
     }
 
     .hand {
@@ -63,7 +64,7 @@
       position: absolute;
       top: 50%;
       transform-origin: 100%;
-      transform: rotate(90deg);
+      transform: rotate(0deg);
       transition: all 0.05s;
       transition-timing-function: ease-in;
     }
@@ -81,59 +82,44 @@
   </style>
 
   <script>
-    let clockRun = false;
-
-    function moveClockHand () {
-      const secondHand = document.querySelector(".second-hand");
-      const minHand = document.querySelector(".min-hand");
-      const hourHand = document.querySelector(".hour-hand");
-
-      let currSecAngle;
-      let currMinAngle;
-      let currHourAngle;
-      
-      // calculate secondHand moving angle
-      if (clockRun === false) {
-        currSecAngle = 90;
-      }
-      else {
-        currSecAngle = secondHand.style.transform;
-        currSecAngle = Number(currSecAngle.match(/\d+/g));
-      }   
-      let rotateSecAngle = currSecAngle + 6;
-
-      // calculate minHand moving angle 
-      if (clockRun === false) {
-        currMinAngle = 90;
-      }
-      else {
-        currMinAngle = minHand.style.transform;
-        currMinAngle = Number(currMinAngle.match(/\d+(\.\d+)?/g));
-      }   
-      let rotateMinAngle = currMinAngle + (6/60);
-
-      // calculate hourHand moving angle 
-      if (clockRun === false) {
-        currHourAngle = 90;
-      }
-      else {
-        currHourAngle = hourHand.style.transform;
-        currHourAngle = Number(currHourAngle.match(/\d+(\.\d+)?/g));
-      }   
-      let rotateHourAngle = currHourAngle + (30/3600);
-
-      // move secondHand
-      secondHand.style.transform = `rotate(${rotateSecAngle}deg)`; 
-      // move minHand
-      minHand.style.transform = `rotate(${rotateMinAngle}deg)`; 
-      // move hourHand
-      hourHand.style.transform = `rotate(${rotateHourAngle}deg)`; 
-
-      clockRun = true;
+    function getCurrTime() {
+      const currentTime = new Date();
+      const timeData = {
+        hours: currentTime.getHours(),
+        min : currentTime.getMinutes(),
+        sec : currentTime.getSeconds()
+      };
+      return timeData;
     }
+    
+    const elem = {
+      hourElem : document.querySelector(".hour-hand"),
+      minElem : document.querySelector(".min-hand"),
+      secElem : document.querySelector(".second-hand")
+    };
 
+    // Place hands to show current time
+    function showCurrTime(hands, currentTime) {
+      const minDeg = currentTime.min * 6;    
+      const secDeg = currentTime.sec * 6; 
+      let hourDeg;
+
+      if (currentTime.hours <= 12) {
+        hourDeg = currentTime.hours * 30;    
+           
+        elem.secElem.style.transform = `rotate(${secDeg}deg)`; 
+        elem.minElem.style.transform = `rotate(${minDeg}deg)`; 
+        elem.hourElem.style.transform = `rotate(${hourDeg}deg)`; 
+      } else {
+        hourDeg = (currentTime.hours - 12) * 30;
+        elem.secElem.style.transform = `rotate(${secDeg}deg)`; 
+        elem.minElem.style.transform = `rotate(${minDeg}deg)`; 
+        elem.hourElem.style.transform = `rotate(${hourDeg}deg)`;
+      }
+
+    }
     // Move hands after 1 second
-    setInterval(moveClockHand,1000);
+    setInterval(e => showCurrTime(elem, getCurrTime()),1000);
   </script>
 </body>
 </html>
