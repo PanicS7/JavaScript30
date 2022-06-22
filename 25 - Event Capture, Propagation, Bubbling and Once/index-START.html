@@ -42,7 +42,15 @@
 
 <button></button>
 <script>
-
+  const elements = document.querySelectorAll("div");
+  function elemClicked() {
+    // To don't run same function per each children
+    event.stopPropagation();
+    console.log(event.target.className);
+  }
+  elements.forEach(el => {
+    el.addEventListener("click", elemClicked);
+  });
 </script>
 </body>
 </html>
